@@ -12,6 +12,6 @@
 #include "headers/AuxiliaryFunctions.h"
 #include "headers/Derivatives.h"
 #include "headers/Integration.h"
-#include "RootFinding.h"
+#include "headers/RootFinding.h"
 
 #endif /* libdatafun_h */
