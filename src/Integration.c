@@ -1,6 +1,6 @@
 //
 //  Integration.c
-//  NJLv
+//  libdatafun
 //
 //  Created by Clebson Graeff on 2017-02-14.
 //  Copyright © 2017 Clebson Graeff. All rights reserved.
