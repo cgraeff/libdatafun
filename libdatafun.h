@@ -9,9 +9,9 @@
 #ifndef libdatafun_h
 #define libdatafun_h
 
-#include "headers/AuxiliaryFunctions.h"
-#include "headers/Derivatives.h"
-#include "headers/Integration.h"
-#include "headers/RootFinding.h"
+#include "AuxiliaryFunctions.h"
+#include "Derivatives.h"
+#include "Integration.h"
+#include "RootFinding.h"
 
 #endif /* libdatafun_h */
