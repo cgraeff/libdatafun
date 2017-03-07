@@ -67,13 +67,9 @@ int MultidimensionalRootFinder(const int                dimension,
 }
 
 
-int UnidimensionalRootFinder(gsl_function   *F,
-                             double          lower_bound,
-                             double          upper_bound,
-                             double          abs_error,
-                             double          rel_error,
-                             int             max_iterations,
-                             double         *return_result)
+int UnidimensionalRootFinder(gsl_function                        *F,
+                             UnidimensionalRootFindingParameters  params,
+                             double                              *return_result)
 {
 
     const gsl_root_fsolver_type * T = gsl_root_fsolver_bisection;
@@ -81,10 +77,11 @@ int UnidimensionalRootFinder(gsl_function   *F,
 
     // Test if the limits straddle the root,
     // if they don't, we will return -1.
-    if (GSL_SIGN(GSL_FN_EVAL(F, lower_bound)) == GSL_SIGN(GSL_FN_EVAL(F, upper_bound)))
+    if (GSL_SIGN(GSL_FN_EVAL(F, params.lower_bound))
+        == GSL_SIGN(GSL_FN_EVAL(F, params.upper_bound)))
         return -1;
 
-    gsl_root_fsolver_set(s, F, lower_bound, upper_bound);
+    gsl_root_fsolver_set(s, F, params.lower_bound, params.upper_bound);
 
     int i = 0;
     double x_lower;
@@ -103,9 +100,9 @@ int UnidimensionalRootFinder(gsl_function   *F,
         x_upper = gsl_root_fsolver_x_upper(s);
     } while(GSL_CONTINUE == gsl_root_test_interval(x_lower,
                                                    x_upper,
-                                                   abs_error,
-                                                   rel_error)
-            && i <= max_iterations);
+                                                   params.abs_error,
+                                                   params.rel_error)
+            && i <= params.max_iterations);
 
     double result = gsl_root_fsolver_root(s);
 

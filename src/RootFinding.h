@@ -14,15 +14,19 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_vector.h>
 
+typedef struct _UnidimensionalRootFindingParameters{
+    int max_iterations;
+    double lower_bound;
+    double upper_bound;
+    double abs_error;
+    double rel_error;
+} UnidimensionalRootFindingParameters;
+
 // Find unidimensional roots. If the provided function does not
 // straddle the root, return -1. Return 0 on success.
-int UnidimensionalRootFinder(gsl_function   *F,
-                             double          lower_bound,
-                             double          upper_bound,
-                             double          abs_error,
-                             double          rel_error,
-                             int             max_iterations,
-                             double         *return_result);
+int UnidimensionalRootFinder(gsl_function   										 *F,
+                             UnidimensionalRootFindingParameters  params,
+                             double         		                 *return_result);
 
 int MultidimensionalRootFinder(const int                dimension,
                                gsl_multiroot_function  *f,
