@@ -19,7 +19,7 @@ int MultidimensionalRootFinder(const int                dimension,
     int status;
     size_t iter = 0;
 
-    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_broyden;
+    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_dnewton;
     gsl_multiroot_fsolver * solver = gsl_multiroot_fsolver_alloc(solver_type,
                                                                  dimension);
 
@@ -30,13 +30,13 @@ int MultidimensionalRootFinder(const int                dimension,
         status = gsl_multiroot_fsolver_iterate(solver);
 
         if (status == GSL_EBADFUNC){
-            printf("TwodimensionalRootFinder: Error: Infinity or division by zero.\n");
+            printf("MultidimensionalRootFinder: Error: Infinity or division by zero.\n");
             abort();
         }
         else if (status == GSL_ENOPROG){
-            printf("TwodimensionalRootFinder: Error: Solver is stuck."
-                   "Try a different initial guess.\n");
-            abort();
+
+            // Solver is stuck, return and let the user try again
+            return -1;
         }
 
         // Check if the root is good enough:
