@@ -8,20 +8,19 @@
 
 #include "RootFinding.h"
 
-int MultidimensionalRootFinder(const int                dimension,
-                               gsl_multiroot_function  *f,
-                               gsl_vector              *initial_guess,
-                               double                   abs_error,
-                               double                   rel_error,
-                               int                      max_iterations,
-                               gsl_vector              *results)
+int
+MultidimensionalRootFinder(gsl_multiroot_function  *f,
+                           MultidimensionalRootFinderParams *params,
+                           const int                dimension,
+                           gsl_vector              *initial_guess,
+                           gsl_vector              *results)
 {
     int status;
     size_t iter = 0;
 
-    const gsl_multiroot_fsolver_type * solver_type = gsl_multiroot_fsolver_broyden;
-    gsl_multiroot_fsolver * solver = gsl_multiroot_fsolver_alloc(solver_type,
-                                                                 dimension);
+    gsl_multiroot_fsolver * solver =
+    gsl_multiroot_fsolver_alloc(params->solver_type,
+                                dimension);
 
     gsl_multiroot_fsolver_set(solver, f, initial_guess);
 
@@ -29,15 +28,13 @@ int MultidimensionalRootFinder(const int                dimension,
         iter++;
         status = gsl_multiroot_fsolver_iterate(solver);
 
-        if (status == GSL_EBADFUNC){
-            printf("TwodimensionalRootFinder: Error: Infinity or division by zero.\n");
-            abort();
+        if (status){
+            printf("MultidimensionalRootFinder:\n");
+            printf ("\tError: %s\n", gsl_strerror (status));
+
+            return -1;
         }
-        else if (status == GSL_ENOPROG){
-            printf("TwodimensionalRootFinder: Error: Solver is stuck."
-                   "Try a different initial guess.\n");
-            abort();
-        }
+
 
         // Check if the root is good enough:
         // tests for the convergence of the sequence by comparing the last step dx
@@ -51,11 +48,11 @@ int MultidimensionalRootFinder(const int                dimension,
 
         status = gsl_multiroot_test_delta(dx,
                                           x,
-                                          abs_error,
-                                          rel_error);
+                                          params->abs_error,
+                                          params->rel_error);
 
     } while (status == GSL_CONTINUE
-             && iter < max_iterations);
+             && iter < params->max_iterations);
 
     // Save results in return variables
     gsl_vector_memcpy(results, gsl_multiroot_fsolver_root(solver));
